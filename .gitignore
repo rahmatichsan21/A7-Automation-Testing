@@ -1,0 +1,13 @@
+# Folder hasil kompilasi Maven
+target/
+
+# Konfigurasi spesifik IDE
+.vscode/
+.idea/
+*.iml
+
+# File kompilasi Java
+*.class
+
+# Log files
+*.log
