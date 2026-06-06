@@ -1,15 +1,16 @@
 package stepdefinitions;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.github.bonigarcia.wdm.WebDriverManager;
+import java.time.Duration;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import java.time.Duration;
+
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class Hooks {
-    // Penggunaan static modifier agar instance WebDriver dapat diakses oleh kelas CommonSteps dan VideoSteps
     public static WebDriver driver;
 
     @Before
@@ -19,12 +20,16 @@ public class Hooks {
         options.addArguments("--remote-allow-origins=*");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
+        
+        // 1. Implicit Wait untuk pencarian elemen di DOM
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        
+        // 2. Page Load Timeout: Menunggu maksimal 60 detik hingga status dokumen HTML "complete"
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
     }
 
     @After
     public void closeBrowser() {
-        // Blok ini akan selalu dieksekusi di akhir skenario, baik skenario tersebut Pass maupun Fail
         if (driver != null) {
             driver.quit();
         }

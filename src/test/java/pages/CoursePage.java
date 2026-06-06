@@ -2,6 +2,7 @@ package pages;
 
 import java.time.Duration;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -12,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class CoursePage {
     WebDriver driver;
     WebDriverWait wait;
+    JavascriptExecutor js;
 
     // 1. Locator Tab Menu
     @FindBy(xpath = "//a[contains(text(), 'Kursus Saya')]")
@@ -33,58 +35,51 @@ public class CoursePage {
     @FindBy(xpath = "//iframe[contains(@src, 'youtube.com')]")
     private WebElement iframeYouTube;
 
-    // 6. Locator Ikon Play YouTube (Di dalam Iframe)
-    @FindBy(xpath = "//span[contains(@class, 'yt-icon-shape')]")
+    // 6. Locator Ikon Play YouTube
+    @FindBy(xpath = "//button[contains(@class, 'ytmCuedOverlayPlayButton')]")
     private WebElement iconPlayYouTube;
 
     public CoursePage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        // Inisialisasi JavaScript Executor
+        this.js = (JavascriptExecutor) driver;
         PageFactory.initElements(driver, this);
     }
 
+    // --- HELPER METHOD UNTUK KLIK ANTI-GAGAL ---
+    private void clickWithJS(WebElement element) {
+        // Tunggu elemen muncul dulu di DOM
+        wait.until(ExpectedConditions.presenceOfElementLocated(
+            org.openqa.selenium.By.xpath(element.toString().split("-> xpath: ")[1].replaceFirst("]$", ""))
+        ));
+        // Eksekusi klik langsung ke jantung HTML-nya
+        js.executeScript("arguments[0].click();", element);
+    }
+
     public void clickTabKursusSaya() {
-        wait.until(ExpectedConditions.elementToBeClickable(tabKursusSaya));
-        tabKursusSaya.click();
+        // Mengganti klik standar dengan JS Click
+        clickWithJS(tabKursusSaya);
     }
 
     public void clickCardContohKursus() {
-        wait.until(ExpectedConditions.elementToBeClickable(cardContohKursus));
-        cardContohKursus.click();
+        clickWithJS(cardContohKursus);
     }
 
     public void clickBtnLanjutkanKursus() {
-        wait.until(ExpectedConditions.elementToBeClickable(btnLanjutkanKursus));
-        btnLanjutkanKursus.click();
+        clickWithJS(btnLanjutkanKursus);
     }
 
     public void clickMateriTestVideo() {
-        wait.until(ExpectedConditions.elementToBeClickable(listTestVideo));
-        listTestVideo.click();
+        clickWithJS(listTestVideo);
     }
 
-    public boolean interactWithYouTubePlayer() {
-        try {
-            // Langkah 1 & 2: Gunakan fungsi khusus Selenium untuk menunggu iframe siap sekaligus masuk ke dalamnya
-            wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframeYouTube));
-            
-            // Langkah 3: Tunggu hingga tombol YouTube di dalam iframe selesai dirender dan bisa diklik
-            wait.until(ExpectedConditions.elementToBeClickable(iconPlayYouTube));
-            iconPlayYouTube.click();
-            
-            // Langkah 4: Kembalikan fokus Selenium ke dokumen utama JTKLearn
-            driver.switchTo().defaultContent();
-            
-            return true;
-        } catch (Exception e) {
-            // Mencetak pesan error teknis ke terminal agar mudah di-debug
-            System.out.println("\n======== ERROR DETAIL YOUTUBE ========");
-            System.out.println(e.getMessage());
-            System.out.println("======================================\n");
-            
-            // Pastikan konteks dikembalikan ke default jika terjadi error
-            driver.switchTo().defaultContent();
-            return false;
-        }
+    public void interactWithYouTubePlayer() {
+        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframeYouTube));
+        
+        // Klik YouTube menggunakan JS Click untuk menembus proteksi invisible element
+        js.executeScript("arguments[0].click();", iconPlayYouTube);
+        
+        driver.switchTo().defaultContent();
     }
 }

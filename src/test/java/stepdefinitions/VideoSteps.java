@@ -1,7 +1,5 @@
 package stepdefinitions;
 
-import org.junit.Assert;
-
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import pages.CoursePage;
@@ -41,9 +39,9 @@ public class VideoSteps {
         coursePage.clickMateriTestVideo();
     }
 
-    @Then("Sistem memuat player video dan ikon YouTube dapat diklik")
+   @Then("Sistem memuat player video dan ikon YouTube dapat diklik")
     public void sistem_memuat_player_video_dan_ikon_youtube_dapat_diklik() {
         initCoursePage();
-        Assert.assertTrue("Gagal berinteraksi dengan player YouTube", coursePage.interactWithYouTubePlayer());
+        coursePage.interactWithYouTubePlayer();
     }
 }
