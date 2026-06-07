@@ -56,7 +56,15 @@ public class CoursePage {
     }
 
     public void clickBtnLanjutkanKursus() {
-        wait.until(ExpectedConditions.elementToBeClickable(btnLanjutkanKursus)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(btnLanjutkanKursus));
+        try {
+            btnLanjutkanKursus.click();
+        } catch (org.openqa.selenium.ElementClickInterceptedException e) {
+            // Jika terhalang elemen lain (misal footer/overlay), gunakan JavaScript untuk scroll dan klik
+            org.openqa.selenium.JavascriptExecutor executor = (org.openqa.selenium.JavascriptExecutor) driver;
+            executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", btnLanjutkanKursus);
+            executor.executeScript("arguments[0].click();", btnLanjutkanKursus);
+        }
     }
 
     public void clickMateriTestVideo() {
