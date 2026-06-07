@@ -16,15 +16,14 @@ public class Hooks {
     @Before
     public void openBrowser() {
         WebDriverManager.chromedriver().setup();
+        
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
+        
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         
-        // 1. Implicit Wait untuk pencarian elemen di DOM
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        
-        // 2. Page Load Timeout: Menunggu maksimal 60 detik hingga status dokumen HTML "complete"
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
     }
 

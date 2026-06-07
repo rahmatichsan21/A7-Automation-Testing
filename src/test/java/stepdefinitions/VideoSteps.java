@@ -1,5 +1,7 @@
 package stepdefinitions;
 
+import org.junit.Assert;
+
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import pages.CoursePage;
@@ -42,6 +44,8 @@ public class VideoSteps {
    @Then("Sistem memuat player video dan ikon YouTube dapat diklik")
     public void sistem_memuat_player_video_dan_ikon_youtube_dapat_diklik() {
         initCoursePage();
-        coursePage.interactWithYouTubePlayer();
+        
+        // Asersi menggunakan JUnit untuk mengonfirmasi JTKLearn sukses menampilkan kontainer video
+        Assert.assertTrue("Iframe video YouTube gagal dirender oleh sistem JTKLearn", coursePage.isYouTubeVideoDisplayed());
     }
 }

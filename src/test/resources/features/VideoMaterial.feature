@@ -1,3 +1,4 @@
+@Video
 Feature: Access Materials
 
   # Blok Background akan memanggil metode dari CommonSteps.java secara otomatis

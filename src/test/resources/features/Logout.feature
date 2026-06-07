@@ -1,3 +1,4 @@
+@Logout
 Feature: Logout
 
   Background: Prasyarat Login
