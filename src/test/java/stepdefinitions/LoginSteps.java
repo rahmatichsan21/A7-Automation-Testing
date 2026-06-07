@@ -6,45 +6,56 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import pages.LoginPage;
+// import pages.DashboardPage; // TODO: Rekan Anda perlu mengimpor DashboardPage nanti
 
 public class LoginSteps {
 
     LoginPage loginPage;
+    // DashboardPage dashboardPage; // TODO: Deklarasi variabel untuk DashboardPage
 
-    // Metode helper untuk Lazy Initialization Page Object
     private void initLoginPage() {
         if (loginPage == null) {
             loginPage = new LoginPage(Hooks.driver);
         }
     }
 
-    @Given("User has opened the browser")
-    public void user_has_opened_the_browser() {
-        // Browser is already opened by Hooks.java
+    // --- LANGKAH BERSAMA (Digunakan oleh skenario Negative dan Positive) ---
+
+    @Given("Pengguna telah menavigasi ke halaman login aplikasi JTKLearn")
+    public void pengguna_telah_menavigasi_ke_halaman_login_aplikasi_jtklearn() {
+        Hooks.driver.get("https://polban-space.cloudias79.com/jtk-learn");
     }
 
-    @Given("User has navigated on the login page Education Fund Payment Management System for Zaidan Educare School app")
-    public void user_has_navigated_on_the_login_page_education_fund_payment_management_system_for_zaidan_educare_school_app() {
-        Hooks.driver.get("http://ptbsp.ddns.net:6882");
-    }
-
-    @When("User enters username {string} & password {string}")
-    public void user_enters_username_password(String username, String password) {
+    @When("Pengguna memasukkan username {string} dan password {string}")
+    public void pengguna_memasukkan_username_dan_password(String username, String password) {
         initLoginPage();
         loginPage.inputCredentials(username, password);
     }
 
-    @When("User clicks on login button")
-    public void user_clicks_on_login_button() {
+    @When("Pengguna mengklik tombol login untuk otentikasi")
+    public void pengguna_mengklik_tombol_login_untuk_otentikasi() {
         initLoginPage();
         loginPage.clickLoginButton();
     }
 
-    @Then("User should be able to see {string} notification message {string} is displayed on screen")
-    public void user_should_be_able_to_see_notification_message_is_displayed_on_screen(String type, String message) {
+    // --- LANGKAH SPESIFIK SKENARIO NEGATIVE ---
+
+    @Then("Sistem menampilkan notifikasi error {string} pada antarmuka")
+    public void sistem_menampilkan_notifikasi_error_pada_antarmuka(String expectedMessage) {
         initLoginPage();
+        Assert.assertTrue("Pesan error otentikasi tidak dirender oleh sistem!", loginPage.isErrorMessageDisplayed());
+    }
+
+    // --- LANGKAH SPESIFIK SKENARIO POSITIVE (Untuk diimplementasikan rekan Anda) ---
+
+    @Then("Sistem mengarahkan pengguna ke halaman dashboard aplikasi")
+    public void sistem_mengarahkan_pengguna_ke_halaman_dashboard_aplikasi() {
+        // TODO: Implementasi logika asersi keberhasilan login di sini
+        // Contoh alur yang perlu ditulis rekan Anda:
+        // 1. Inisialisasi DashboardPage
+        // 2. Gunakan explicit wait untuk memastikan elemen unik di Dashboard muncul (misal: elemen profil pengguna)
+        // 3. Gunakan Assert.assertTrue() untuk memvalidasi elemen tersebut
         
-        // Memastikan pesan error yang tampil sesuai dengan ekspektasi
-        Assert.assertTrue("Notification message '" + message + "' is not displayed!", loginPage.isErrorMessageDisplayed());
+        throw new io.cucumber.java.PendingException("Langkah asersi login sukses belum diimplementasikan.");
     }
 }

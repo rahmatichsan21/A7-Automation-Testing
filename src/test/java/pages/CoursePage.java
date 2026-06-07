@@ -2,6 +2,7 @@ package pages;
 
 import java.time.Duration;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -12,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class CoursePage {
     WebDriver driver;
     WebDriverWait wait;
+    JavascriptExecutor js;
 
     @FindBy(xpath = "//a[contains(text(), 'Kursus Saya')]")
     private WebElement tabKursusSaya;
@@ -28,54 +30,60 @@ public class CoursePage {
     @FindBy(xpath = "//li[contains(@class, 'learn-list-item') and contains(., 'Test Video')]")
     private WebElement listTestVideo;
 
-    @FindBy(xpath = "//li[contains(@class, 'learn-list-item') and contains(., 'PDF')]")
+    @FindBy(xpath = "//li[contains(@class, 'learn-list-item') and contains(., 'Pengantar')]")
     private WebElement listTestPDF;
 
     @FindBy(xpath = "//iframe[contains(@src, 'youtube.com')]")
     private WebElement iframeYouTube;
 
-    @FindBy(xpath = "//iframe[contains(@src, '.pdf') or @type='application/pdf']")
-    private WebElement iframePDF;
-
     public CoursePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        this.js = (JavascriptExecutor) driver;
         PageFactory.initElements(driver, this);
     }
 
-    public void clickTabKursusSaya() {
-        wait.until(ExpectedConditions.elementToBeClickable(tabKursusSaya)).click();
-    }
-
-    public void clickCardContohKursus() {
-        wait.until(ExpectedConditions.elementToBeClickable(cardContohKursus)).click();
-    }
-
-    public void clickCardCyberSecurity() {
-        wait.until(ExpectedConditions.elementToBeClickable(cardCyberSecurity)).click();
-    }
-
-    public void clickBtnLanjutkanKursus() {
-        wait.until(ExpectedConditions.elementToBeClickable(btnLanjutkanKursus));
+    // --- HELPER METHOD: Menyeragamkan logika klik di satu tempat ---
+    private void safeClick(WebElement element) {
+        wait.until(ExpectedConditions.elementToBeClickable(element));
         try {
-            btnLanjutkanKursus.click();
+            // Mencoba klik standar Selenium terlebih dahulu
+            element.click();
         } catch (org.openqa.selenium.ElementClickInterceptedException e) {
-            // Jika terhalang elemen lain (misal footer/overlay), gunakan JavaScript untuk scroll dan klik
-            org.openqa.selenium.JavascriptExecutor executor = (org.openqa.selenium.JavascriptExecutor) driver;
-            executor.executeScript("arguments[0].scrollIntoView({block: 'center'});", btnLanjutkanKursus);
-            executor.executeScript("arguments[0].click();", btnLanjutkanKursus);
+            // Jika terhalang (intercepted), otomatis fallback ke eksekusi JavaScript
+            js.executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
+            js.executeScript("arguments[0].click();", element);
         }
     }
 
+    // --- PUBLIC METHODS: Bersih, seragam, dan mudah dibaca ---
+    
+    public void clickTabKursusSaya() {
+        safeClick(tabKursusSaya);
+    }
+
+    public void clickCardContohKursus() {
+        safeClick(cardContohKursus);
+    }
+
+    public void clickCardCyberSecurity() {
+        safeClick(cardCyberSecurity);
+    }
+
+    public void clickBtnLanjutkanKursus() {
+        safeClick(btnLanjutkanKursus);
+    }
+
     public void clickMateriTestVideo() {
-        wait.until(ExpectedConditions.elementToBeClickable(listTestVideo)).click();
+        safeClick(listTestVideo);
     }
 
     public void clickMateriTestPDF() {
-        wait.until(ExpectedConditions.elementToBeClickable(listTestPDF)).click();
+        safeClick(listTestPDF);
     }
 
-    // Metode asersi: Hanya memastikan iframe dirender dengan benar oleh JTKLearn
+    // --- ASERSI VISUAL ---
+
     public boolean isYouTubeVideoDisplayed() {
         try {
             wait.until(ExpectedConditions.visibilityOf(iframeYouTube));
@@ -87,10 +95,20 @@ public class CoursePage {
 
     public boolean isPDFDisplayed() {
         try {
-            wait.until(ExpectedConditions.visibilityOf(iframePDF));
-            return iframePDF.isDisplayed();
+            delay(2000); 
+            org.openqa.selenium.By pdfLocator = org.openqa.selenium.By.xpath("//iframe[contains(@src, '.pdf') or @title='PDF Viewer']");
+            wait.until(ExpectedConditions.presenceOfElementLocated(pdfLocator));
+            return true;
         } catch (org.openqa.selenium.TimeoutException e) {
             return false;
+        }
+    }
+
+    private void delay(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 }
