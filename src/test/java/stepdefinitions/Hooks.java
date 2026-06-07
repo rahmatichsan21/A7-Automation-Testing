@@ -15,14 +15,18 @@ public class Hooks {
 
     @Before
     public void openBrowser() {
-        WebDriverManager.chromedriver().setup();
-        
+        WebDriverManager.chromedriver().clearDriverCache().clearResolutionCache().setup();
+
         ChromeOptions options = new ChromeOptions();
+        options.setBinary("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe");
         options.addArguments("--remote-allow-origins=*");
-        
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu");
+
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
-        
+
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
     }

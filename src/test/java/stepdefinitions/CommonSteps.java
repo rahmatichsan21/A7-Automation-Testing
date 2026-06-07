@@ -12,7 +12,7 @@ public class CommonSteps {
     public void pelajar_telah_berhasil_login() {
         // Memanggil driver statis dari kelas Hooks
         Hooks.driver.get("https://polban-space.cloudias79.com/jtk-learn");
-
+        
         // Inisialisasi Page Object Model
         LoginPage loginPage = new LoginPage(Hooks.driver);
         DashboardPage dashboardPage = new DashboardPage(Hooks.driver);

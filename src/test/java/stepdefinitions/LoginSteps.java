@@ -49,13 +49,8 @@ public class LoginSteps {
     // --- LANGKAH SPESIFIK SKENARIO POSITIVE (Untuk diimplementasikan rekan Anda) ---
 
     @Then("Sistem mengarahkan pengguna ke halaman dashboard aplikasi")
-    public void sistem_mengarahkan_pengguna_ke_halaman_dashboard_aplikasi() {
-        // TODO: Implementasi logika asersi keberhasilan login di sini
-        // Contoh alur yang perlu ditulis rekan Anda:
-        // 1. Inisialisasi DashboardPage
-        // 2. Gunakan explicit wait untuk memastikan elemen unik di Dashboard muncul (misal: elemen profil pengguna)
-        // 3. Gunakan Assert.assertTrue() untuk memvalidasi elemen tersebut
-        
-        throw new io.cucumber.java.PendingException("Langkah asersi login sukses belum diimplementasikan.");
+    public void sistem_mengarahkan_pengguna_ke_halaman_dashboard_aplikasi() throws InterruptedException {
+        Thread.sleep(2000);
+        Assert.assertTrue(Hooks.driver.getCurrentUrl().contains("dashboard"));
     }
 }

@@ -8,10 +8,9 @@ Feature: Login Functionality JTKLearn
     And Pengguna mengklik tombol login untuk otentikasi
     Then Sistem menampilkan notifikasi error "Username atau password salah" pada antarmuka
 
-  @Positive
+@Positive
   Scenario: Validasi akses masuk yang berhasil dengan kredensial valid
-    # TODO: Rekan Anda perlu menghapus tanda '#' di bawah ini saat siap mengimplementasikan
-    # Given Pengguna telah menavigasi ke halaman login aplikasi JTKLearn
-    # When Pengguna memasukkan username "email_valid@example.com" dan password "password_valid"
-    # And Pengguna mengklik tombol login untuk otentikasi
-    # Then Sistem mengarahkan pengguna ke halaman dashboard aplikasi
+    Given Pengguna telah menavigasi ke halaman login aplikasi JTKLearn
+    When Pengguna memasukkan username "nessierdays@gmail.com" dan password "12345678"
+    And Pengguna mengklik tombol login untuk otentikasi
+    Then Sistem mengarahkan pengguna ke halaman dashboard aplikasi
