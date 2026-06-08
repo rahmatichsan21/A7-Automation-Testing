@@ -9,11 +9,13 @@ import io.cucumber.junit.CucumberOptions;
 @CucumberOptions(
     features = "src/test/resources/features",
     glue = "stepdefinitions",
+    // Tambahkan plugin ExtentCucumberAdapter di baris ini
     plugin = {
         "pretty", 
         "html:target/cucumber-reports/report.html",
-        "json:target/cucumber-reports/Cucumber.json"
-    }
+        "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:" 
+    },
+    monochrome = true
 )
 public class TestRunner {
 }
