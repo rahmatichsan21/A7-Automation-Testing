@@ -23,6 +23,7 @@ public class Hooks {
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-gpu");
+        options.addArguments("--incognito");
 
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();

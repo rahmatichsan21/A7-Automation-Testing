@@ -33,7 +33,10 @@ public class LoginPage {
     }
 
     public void inputCredentials(String username, String password) {
+        wait.until(ExpectedConditions.elementToBeClickable(fieldUsername));
+        fieldUsername.clear();
         fieldUsername.sendKeys(username);
+        fieldUsername.clear();
         fieldPassword.sendKeys(password);
     }
 

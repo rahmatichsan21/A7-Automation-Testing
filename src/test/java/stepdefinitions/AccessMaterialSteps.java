@@ -41,8 +41,10 @@ public class AccessMaterialSteps {
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", lanjutkanBtn);
         Thread.sleep(3000);
 
-        driver.get("https://polban-space.cloudias79.com/jtk-learn/learn-course/36");
-        Thread.sleep(2000);
+        // Tunggu hingga konten materi pertama (judul materi) muncul,
+        // tanpa hardcode navigasi ke URL course tertentu
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.cssSelector("h3.material-title")));
     }
 
     @When("Pelajar mengklik tombol Selanjutnya")

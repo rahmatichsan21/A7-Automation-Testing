@@ -56,12 +56,19 @@ public class CoursePage {
         }
     }
 
-    
-
     // --- PUBLIC METHODS: Bersih, seragam, dan mudah dibaca ---
-    
+
     public void clickTabKursusSaya() {
         safeClick(tabKursusSaya);
+        waitForCoursesToLoad();
+    }
+
+    // Menunggu hingga minimal satu card kursus (h6) muncul di halaman
+    private void waitForCoursesToLoad() {
+        org.openqa.selenium.By anyCourseCard = org.openqa.selenium.By.xpath(
+            "//h6[contains(text(), 'Contoh Kursus') or contains(text(), 'CyberSecurity')]"
+        );
+        wait.until(ExpectedConditions.presenceOfElementLocated(anyCourseCard));
     }
 
     public void clickCardContohKursus() {
@@ -77,10 +84,18 @@ public class CoursePage {
     }
 
     public void clickMateriTestVideo() {
+        org.openqa.selenium.By locator = org.openqa.selenium.By.xpath(
+            "//li[contains(@class, 'learn-list-item') and contains(., 'Test Video')]"
+        );
+        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
         safeClick(listTestVideo);
     }
 
     public void clickMateriTestPDF() {
+        org.openqa.selenium.By locator = org.openqa.selenium.By.xpath(
+            "//li[contains(@class, 'learn-list-item') and contains(., 'Pengantar')]"
+        );
+        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
         safeClick(listTestPDF);
     }
 
@@ -97,7 +112,7 @@ public class CoursePage {
 
     public boolean isPDFDisplayed() {
         try {
-            delay(2000); 
+            delay(2000);
             org.openqa.selenium.By pdfLocator = org.openqa.selenium.By.xpath("//iframe[contains(@src, '.pdf') or @title='PDF Viewer']");
             wait.until(ExpectedConditions.presenceOfElementLocated(pdfLocator));
             return true;
